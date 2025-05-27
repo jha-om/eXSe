@@ -1,202 +1,169 @@
+import FriendRequest from "../models/friend-request.model.js";
 import User from "../models/user.model.js"
-import { upsertStreamUser } from "../utils/stream.js";
-
-const generateToken = async (userId) => {
+async function getRecommendedUsers(req, res) {
     try {
-        const user = await User.findById(userId);
-        const token = user.generateToken();
+        const currentUserId = req.user._id;
+        const currentUser = req.user;
 
-        // user.token = token;
-        // await user.save({ validateBeforeSave: false });
-
-        return { token };
-    } catch (error) {
-        throw new Error("error while creating the token, please try again later!!!", error);
-    }
-}
-async function signup(req, res) {
-    const { email, password, fullName } = req.body;
-    try {
-        if ([email, password, fullName].some(field => field?.trim() === "")) {
-            return res.status(400).json({ message: "all fields are required" });
-        }
-        if (password.length < 6) {
-            return res.status(400).json({ message: "password must be at least 6 characters" });
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: "Invalid email format" });
-        }
-
-        const existingUser = await User.findOne({ email })
-        if (existingUser) {
-            return res.status(400).json({ message: "email already exists, use a different one" });
-        }
-
-        const idx = Math.floor(Math.random() * 100) + 1;
-        const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
-
-        const newUser = await User.create({
-            email,
-            fullName,
-            password,
-            profilePic: randomAvatar
+        const recommendedUsers = await User.find({
+            $and: [
+                { _id: { $ne: currentUserId } },
+                { $id: { $nin: currentUser.friends } },
+                { isOnboarded: true },
+            ]
         });
-
-        try {
-            await upsertStreamUser({
-                id: newUser._id.toString(),
-                name: newUser.fullName,
-                image: newUser.profilePic || "",
-            })
-            console.log(`Stream user created for ${newUser.fullName}`);
-        } catch (error) {
-            console.log("error creating stream user: ", error);
-        }
-
-        const createdUser = await User.findById(newUser._id).select("-password");
-        if (!createdUser) {
-            return res.status(500).json({
-                message: "internal server error while creating this user"
-            })
-        }
-        res.status(201).json({
-            success: true,
-            createdUser,
-            message: "user created successfully",
-        });
+        res.status(200).json(recommendedUsers);
     } catch (error) {
-        console.log("error in signup controller", error);
+        console.error("error in getRecommendedUsers controller", error.message);
+
         res.status(500).json({ message: "internal server error" });
     }
 }
 
-async function login(req, res) {
+async function getMyFriends(req, res) {
     try {
-        const { email, password } = req.body;
-        if ([email, password].some(field => field.trim() === "")) {
-            return res.status(400).json({ message: "all fields are required to login" });
-        }
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(401).json({ message: "invalid email or password" });
-        }
-        const isPasswordCorrect = await user.isPasswordCorrect(password);
-        if (!isPasswordCorrect) {
-            return res.status(401).json({ message: "invalid email or password" });
-        }
-
-        const { token } = await generateToken(user._id);
-
-        const loggedInUser = await User.findById(user._id).select("-password -token");
-
-        const options = {
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: true, // prevents XSS attacks,
-            sameSite: "strict",  // prevents CSRF requests
-            secure: process.env.NODE_ENV === "production",
-        }
-
-        res.status(200).cookie("token", token, options).json({
-            success: true,
-            message: "user logged in successfully",
-            user: loggedInUser,
-            token,
-        })
+        const user = await User.findById(req.user._id).select("friends")
+            .populate("friends", "fullName profilePic bio");
+        
+        res.status(200).json(user.friends);
     } catch (error) {
-        console.log("error while login ::", error);
-        res.status(500).json({
-            message: "internal server error"
-        })
+        console.error("error in getRecommendedUsers controller", error.message);
+
+        res.status(500).json({ message: "internal server error" });
     }
 }
 
-async function logout(req, res) {
+async function sendFriendRequest(req, res) {
     try {
-        const options = {
-            httpOnly: true,
-            sameSite: "strict",
-            secure: process.env.NODE_ENV === "production",
-        };
-        return res.status(200).clearCookie("token", options).json({
-            success: true,
-            message: "user logged out successfully"
+        const myId = req.user._id;
+        const { id: recipientId } = req.params
+        if (myId === recipientId) {
+            return res.status(400).json({
+                message: "you can't send friend request to yourself"
+            });
+        }
+        const recipient = await User.findById(recipientId);
+        if (!recipient) {
+            return res.status(404).json({
+                message: "This guy is not my friend"
+            })
+        }
+
+        if (recipient.friends.include(myId)) {
+            return res.status(400).json({
+                message: "We're already friends"
+            })
+        }
+
+        const existingRequest = await FriendRequest.findOne({
+            $or: [
+                { sender: myId, recipient: recipientId },
+                { sender: recipientId, sender: myId },
+            ]
         })
+
+        if (existingRequest) {
+            return res.status(400).json({
+                message: "A friend request already exists between you and this user"
+            })
+        }
+
+        const friendRequest = await FriendRequest.create({
+            sender: myId,
+            recipient: recipientId,
+        });
+
+        res.status(201).json(friendRequest);
     } catch (error) {
-        console.log("error while logout ::", error);
-        return res.status(500).json({
-            success: false,
+        console.error("error in sendFriendRequest Controller", error.message);
+        res.status(500).json({
             message: "internal server error"
         });
     }
 }
 
-async function onboard(req, res) {
+async function acceptFriendRequest(req, res) {
     try {
-        const userId = req.user._id;
-        console.log("req.user", req.user);
-        console.log(userId);
-        const { fullName, bio, nativeLanguage, learningLanguage, location } = req.body;
-            if(!fullName || !bio || !nativeLanguage || !learningLanguage || !location ) {
-            return res.status(400).json({
-                message: "all fields are required",
-                missingFields: [
-                    !fullName && "fullName",
-                    !bio && "bio",
-                    !nativeLanguage && "nativeLanguage",
-                    !learningLanguage && "learningLanguage",
-                    !location && "location"
-                ].filter(Boolean)
-            })
-        }
+        const { id: requestId } = req.params;
 
-        const updatedUser = await User.findByIdAndUpdate(userId, {
-            ...req.body,
-            isOnboarded: true,
-        }, {
-            new: true
-        }).select("-password");
+        const friendRequest = await FriendRequest.findById(requestId);
 
-        if (!updatedUser) {
+        if (!friendRequest) {
             return res.status(404).json({
-                message: "User not found",
+                message: "friend request not found"
             })
         }
 
-        try {
-            await upsertStreamUser({
-                id: updatedUser._id.toString(),
-                fullName: updatedUser.fullName,
-                image: updatedUser.profilePic || "",
+        // check karo ki agar current user hi recipient hai ki nhi;
+        if (friendRequest.recipient.toString() !== req.user._id) {
+            return res.status(403).json({
+                message: "you aren't authorized to accept this request"
             })
-            console.log(`stream user updated after onboarding for ${updatedUser.fullName}`);
-        } catch (error) {
-            console.log("error while updating stream user during onboarding: ", error.message);
         }
-        return res.status(200).json({
-            success: true,
-            user: updatedUser,
-            message: "User updated successfully"
-        })
+        friendRequest.status = "accepted";
+        await friendRequest.save();
+
+        await User.findByIdAndUpdate(friendRequest.sender, {
+            $addToSet: { friends: friendRequest.recipient }
+        });
+
+        await User.findByIdAndUpdate(friendRequest.recipient, {
+            $addToSet: { friends: friendRequest.sender }
+        });
     } catch (error) {
-        console.log("onboarding error", error);
-        return res.status(500).json({
-            messag: "internal server error"
-        })
+        console.error("error acceptFriendRequest Controller", error.message);
+        res.status(500).json({
+            message: "internal server error"
+        });
     }
 }
 
-async function me(req, res) {
-    const user = req.user;
-    return res.status(200).json({
-        user
-    })
+async function getFriendRequests(req, res) {
+    try {
+        const incomingRequests = await FriendRequest.find({
+            recipient: req.user._id,
+            status: "pending"
+        }).populate("sender", "fullName, profilePic, bio");
+
+        const acceptedRequests = await FriendRequest.find({
+            sender: req.user._id,
+            status: "accepted",
+        }).populate("recipient", "fullName, profilePic");
+
+        res.status(200).json({
+            incomingRequests, 
+            acceptedRequests
+        })
+    } catch (error) {
+        console.error("error getFriendRequests Controller", error.message);
+        res.status(500).json({
+            message: "internal server error"
+        });
+    }
+    
 }
+
+async function getOutgoingFriendRequests(req, res) {
+    try {
+        const outgoingRequests = await FriendRequest.find({
+            sender: req.user._id,
+            status: "pending",
+        }).populate("recipient", "fullName profilePic, bio");
+
+        res.status(200).json(outgoingRequests);
+    } catch (error) {
+        console.error("error getOutgoingFriendRequests Controller", error.message);
+        res.status(500).json({
+            message: "internal server error"
+        });
+    }
+}
+
 export {
-    signup,
-    login,
-    logout,
-    onboard,
-    me
+    getRecommendedUsers,
+    getMyFriends,
+    sendFriendRequest,
+    acceptFriendRequest,
+    getFriendRequests,
+    getOutgoingFriendRequests,
 }

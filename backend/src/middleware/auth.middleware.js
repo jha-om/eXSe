@@ -18,8 +18,6 @@ const verifyJWT = async (req, res, next) => {
             })
         }
 
-        console.log(decodedToken._id);
-
         const user = await User.findById(decodedToken._id).select("-password -token");
         if (!user) {
             return res.status(401).json({
