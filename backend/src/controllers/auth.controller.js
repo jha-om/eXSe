@@ -1,3 +1,4 @@
+import User from "../models/user.model.js";
 import { upsertStreamUser } from "../utils/stream.js";
 
 const generateToken = async (userId) => {
