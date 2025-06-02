@@ -6,6 +6,7 @@ async function getRecommendedUsers(req, res) {
         const currentUser = req.user;
 
         const recommendedUsers = await User.find({
+            // except my id, and my already friends, can u show the new and recommended friends to me;
             $and: [
                 { _id: { $ne: currentUserId } },
                 { $id: { $nin: currentUser.friends } },
@@ -45,10 +46,9 @@ async function sendFriendRequest(req, res) {
         const recipient = await User.findById(recipientId);
         if (!recipient) {
             return res.status(404).json({
-                message: "This guy is not my friend"
+                message: "This guy doesn't exists to become my friend"
             })
         }
-
         if (recipient.friends.include(myId)) {
             return res.status(400).json({
                 message: "We're already friends"
