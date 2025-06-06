@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import { upsertStreamUser } from "../utils/stream.js";
+import { upsertStreamUser } from "../lib/stream.js";
 
 const generateToken = async (userId) => {
     try {
@@ -176,7 +176,7 @@ async function onboard(req, res) {
     } catch (error) {
         console.log("onboarding error", error);
         return res.status(500).json({
-            messag: "internal server error"
+            message: "internal server error"
         })
     }
 }
