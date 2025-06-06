@@ -8,45 +8,26 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#F72585',
+        secondary: '#7209B7',
+      }
+    },
   },
   plugins: [
     daisyui
   ],
   daisyui: {
     themes: [
+      {
+        "primary": "#F72585",
+      },
       "light",
       "dark",
-      "cupcake",
-      "bumblebee",
-      "emerald",
-      "corporate",
-      "synthwave",
-      "retro",
-      "cyberpunk",
-      "valentine",
-      "halloween",
-      "garden",
       "forest",
-      "aqua",
-      "lofi",
-      "pastel",
-      "fantasy",
-      "wireframe",
       "black",
-      "luxury",
-      "dracula",
-      "cmyk",
-      "autumn",
-      "business",
-      "acid",
-      "lemonade",
       "night",
-      "coffee",
-      "winter",
-      "dim",
-      "nord",
-      "sunset",
     ],
   },
 }
