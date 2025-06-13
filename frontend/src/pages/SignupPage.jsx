@@ -11,36 +11,19 @@ function SignupPage() {
         email: "",
         password: ""
     });
+
     const navigate = useNavigate();
-    // const queryClient = useQueryClient();
 
-    // const { mutate, isPending, error } = useMutation({
-    //     mutationFn: async () => {
-    //         const response = await axiosInstance.post("/auth/signup", signupData);
-    //         return response.data;
-    //     },
-    //     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] })
-    // });
-
-    const { mutate:signupMutation, isPending, error } = useMutation({
+    const { mutate: signupMutation, isPending, error } = useMutation({
         mutationFn: signup,
         onSuccess: () => {
-            console.log("Signup successful!");
             toast.success("Account created successfully! :), Now Please login.");
             navigate("/login");
         },
-        onError: (error) => {
-            console.log("Signup error:", error);
-            toast.error(error?.response?.data?.message || "Signup failed");
-        }
     })
-
-    console.log("Current isPending state:", isPending);
 
     const handleSignup = (e) => {
         e.preventDefault();
-        console.log("Form submitted, isPending:", isPending);
-        console.log("Signup data:", signupData);
         signupMutation(signupData);
     }
 
@@ -133,9 +116,8 @@ function SignupPage() {
                                 <button className="btn btn-primary font-extrabold w-full rounded-full bg-primary/75" type="submit">
                                     {isPending ? (
                                         <>
-                                            <span className="loading loading-spinner loading-xs text-white">
-                                                Loading...
-                                            </span>
+                                            <span className="loading loading-spinner loading-xs text-white"></span>
+                                            Loading...
                                         </>
                                     ) : (
                                             "Create Account"
