@@ -2,7 +2,7 @@ import { Loader2 } from "lucide-react"
 
 function PageLoader() {
     return (
-        <div className="min-h-screen flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center" data-theme="black">
             <Loader2 className="animate-spin size-8 text-primary" />
         </div>
     )

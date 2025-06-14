@@ -1,9 +1,7 @@
 import { useState } from "react"
 import { Heart } from 'lucide-react';
-import { Link, useNavigate } from "react-router"
-import { useMutation } from "@tanstack/react-query"
-import toast from "react-hot-toast";
-import { signup } from "../lib/api.js";
+import { Link } from "react-router"
+import useSignup from "../hooks/useSignup";
 
 function SignupPage() {
     const [signupData, setSignupData] = useState({
@@ -12,16 +10,17 @@ function SignupPage() {
         password: ""
     });
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    const { mutate: signupMutation, isPending, error } = useMutation({
-        mutationFn: signup,
-        onSuccess: () => {
-            toast.success("Account created successfully! :), Now Please login.");
-            navigate("/login");
-        },
-    })
-
+    // const { mutate: signupMutation, isPending, error } = useMutation({
+    //     mutationFn: signup,
+    //     onSuccess: () => {
+    //         toast.success("Account created successfully! :), Now Please login.");
+    //         navigate("/login");
+    //     },
+    // });
+    
+    const { signupMutation, isPending, error } = useSignup();
     const handleSignup = (e) => {
         e.preventDefault();
         signupMutation(signupData);

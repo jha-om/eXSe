@@ -1,9 +1,7 @@
 import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser"
 import { BellDotIcon, Heart, Home, LogOutIcon, UserIcon } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { logout } from "../lib/api";
-import toast from "react-hot-toast";
+import useLogout from "../hooks/useLogout";
 
 function Sidebar() {
     const { authUser } = useAuthUser();
@@ -11,26 +9,28 @@ function Sidebar() {
     const currentPath = location.pathname;
     console.log(currentPath);
 
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
 
-    const { mutate: logoutMutation } = useMutation({
-        mutationFn: logout,
-        onSuccess: () => {
-            toast.success("Logout successfully");
-            queryClient.setQueryData(["authUser"], null);
-            queryClient.invalidateQueries({ queryKey: ["authUser"] })
-        }
-    })
-    const handleLogout = (e) => {
-        e.preventDefault();
+    // const { mutate: logoutMutation } = useMutation({
+    //     mutationFn: logout,
+    //     onSuccess: () => {
+    //         toast.success("Logout successfully");
+    //         queryClient.setQueryData(["authUser"], null);
+    //         queryClient.invalidateQueries({ queryKey: ["authUser"] })
+    //     }
+    // })
+
+    const { logoutMutation } = useLogout();
+
+    const handleLogout = () => {
         logoutMutation();
     }
 
     return (
-        <aside className="w-64 border-r border-base-300 hidden lg:flex flex-col h-screen sticky top-0">
-            <div className="p-5 border-b border-base-300">
+        <aside className="w-64 border-base-300 hidden lg:flex flex-col h-screen sticky top-0">
+            <div className="p-5 border-base-300">
                 <Link to={"/"} className="flex items-center gap-2.5">
-                    <Heart className="size-9 text-primary" />
+                    <Heart className="size-8 text-primary" />
                     <span className="text-3xl text-primary font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-wider">
                         eXSe
                     </span>
