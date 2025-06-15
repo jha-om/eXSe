@@ -9,7 +9,7 @@ async function getRecommendedUsers(req, res) {
             // except my id, and my already friends, can u show the new and recommended friends to me;
             $and: [
                 { _id: { $ne: currentUserId } },
-                { $id: { $nin: currentUser.friends } },
+                { _id: { $nin: currentUser.friends } },
                 { isOnboarded: true },
             ]
         });
