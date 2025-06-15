@@ -27,7 +27,7 @@ function Sidebar() {
     }
 
     return (
-        <aside className="w-64 border-base-300 hidden lg:flex flex-col h-screen sticky top-0">
+        <aside className="w-64 hidden border ml-5 mt-5 mb-5 rounded-2xl border-base-300 lg:flex flex-col h-[calc(100vh-2.5rem)] sticky top-0">
             <div className="p-5 border-base-300">
                 <Link to={"/"} className="flex items-center gap-2.5">
                     <Heart className="size-8 text-primary" />
@@ -39,21 +39,21 @@ function Sidebar() {
             <div className="flex-1 p-4 space-y-2">
                 <Link
                     to={"/"}
-                    className={`btn justify-start w-full gap-3 px-3 normal-case rounded-full ${currentPath === "/" ? "btn-active border-r-primary border-r-2 border-b-primary" : ""}`}
+                    className={`btn justify-start w-full gap-3 px-3 normal-case rounded-full ${currentPath === "/" ? "btn-active border-r-primary border-r-2 border-b-primary hover:btn-ghost" : ""}`}
                 >
                     <Home className="size-5 text-base-content opacity-70" color="#f72585" />
                     <span>Home</span>
                 </Link>
                 <Link
                     to={"/friends"}
-                    className={`btn justify-start w-full gap-3 px-3 normal-case rounded-full ${currentPath === "/friends" ? "btn-active border-r-primary border-r-2 border-b-primary" : ""}`}
+                    className={`btn justify-start w-full gap-3 px-3 normal-case rounded-full ${currentPath === "/friends" ? "btn-active border-r-primary border-r-2 border-b-primary hover:btn-ghost" : ""}`}
                 >
                     <UserIcon className="size-5 text-base-content opacity-70" color="#f72585" />
                     <span>Friends</span>
                 </Link>
                 <Link
                     to={"/notifications"}
-                    className={`btn justify-start w-full gap-3 px-3 normal-case rounded-full ${currentPath === "/notifications" ? "btn-active border-r-primary border-r-2 border-b-primary" : ""}`}
+                    className={`btn justify-start w-full gap-3 px-3 normal-case rounded-full ${currentPath === "/notifications" ? "btn-active border-r-primary border-r-2 border-b-primary hover:btn-ghost" : ""}`}
                 >
                     <BellDotIcon className="size-5 text-base-content opacity-70" color="#f72585" />
                     <span>Notifications</span>
@@ -65,7 +65,9 @@ function Sidebar() {
                 <div className="flex items-center gap-3">
                     <div className="avatar">
                         <div className="w-10 rounded-full">
-                            <img src={authUser?.profilePic} alt="user profile" />
+                            <Link to={"/me"}>
+                                <img src={authUser?.profilePic} alt="user profile" />
+                            </Link>
                         </div>
                     </div>
                     <div className="flex-1">

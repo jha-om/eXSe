@@ -2,6 +2,7 @@ import { useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser"
 import { Link } from "react-router";
 import { BellDotIcon } from "lucide-react";
+import { Heart } from "lucide-react";
 
 function Navbar() {
     const { authUser } = useAuthUser();
@@ -10,7 +11,7 @@ function Navbar() {
     // console.log(isChatPage);
 
     return (
-        <nav className="bg-base-100 border-base-300 sticky top-0 z-30 h-[4.8rem] flex items-center">
+        <nav className="bg-base-100 border m-5 rounded-full border-base-300 sticky top-0 z-30 h-[4.8rem] flex items-center">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-end w-full">
                     {/* logo -- only in the chat page */}
@@ -35,8 +36,9 @@ function Navbar() {
 
                     <div className="avatar ml-5">
                         <div className="w-10 rounded-full">
-                            <img src={authUser?.profilePic} alt="user profile" />
-                            <Link to={"/me"} />
+                            <Link to={"/me"}>
+                                <img src={authUser?.profilePic} alt="user profile" />
+                            </Link>
                         </div>
                     </div>
                 </div>
