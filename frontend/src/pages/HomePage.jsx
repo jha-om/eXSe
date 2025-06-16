@@ -76,7 +76,7 @@ function HomePage() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Meet New Friends</h2>
-                            <p className="opacity-70">
+                            <p className="opacity-70 mb-15">
                                 Discover a new friend from anywhere in the world :)
                             </p>
                         </div>

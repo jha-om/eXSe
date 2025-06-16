@@ -24,6 +24,7 @@ function App() {
   return (
     <div className="h-screen" data-theme="black">
       <Routes>
+        {/* home page */}
         <Route path="/" element={isAuthenticated && isOnboarded ? (
           <Layout showSidebar={true}>
             <HomePage />
@@ -31,10 +32,16 @@ function App() {
         ) : (
           <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />)}
         />
+
+        {/* signup page*/}
         <Route path="/signup" element={!isAuthenticated ? <SignupPage /> : <Navigate to={"/"} />} />
+        
+        {/* login page*/}
         <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to={
           isOnboarded ? "/" : "/onboarding"
         } />} />
+
+        {/* notifications page */}
         <Route path="/notifications" element={isAuthenticated && isOnboarded ? (
           <Layout showSidebar={true}>
             <NotificationsPage />
@@ -42,12 +49,22 @@ function App() {
         ) : (
           <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
         )} />
-        <Route path="/call" element={isAuthenticated ? <CallPage /> : <Navigate to={"/login"} />} />
+
+        {/* call page */}
+        <Route path="/call/:id" element={isAuthenticated && isOnboarded ? (
+          <CallPage />
+        ) : (
+          <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+        )} />
+        
+        {/* specific chat page */}
         <Route path="/chat/:id" element={isAuthenticated && isOnboarded ? (
           <Layout showSidebar={false}>
             <ChatPage />
           </Layout>
         ) : <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />} />
+        
+        {/* onboarding page */}
         <Route path="/onboarding" element={isAuthenticated ? (
           !isOnboarded ? (
             <OnboardingPage />

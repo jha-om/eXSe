@@ -4,6 +4,7 @@ import { BellDotIcon, Heart, Home, LogOutIcon, UserIcon } from "lucide-react";
 import useLogout from "../hooks/useLogout";
 import { useQuery } from "@tanstack/react-query";
 import { getfriendRequests } from "../lib/api";
+import toast from "react-hot-toast";
 
 function Sidebar() {
     const { authUser } = useAuthUser();
@@ -28,9 +29,10 @@ function Sidebar() {
 
     const incomingRequests = friendRequests?.incomingRequests || [];
 
-    const { logoutMutation } = useLogout();
+    const { logoutMutation, error } = useLogout();
 
     const handleLogout = () => {
+        { error && toast.error(error.response.data.message) };
         logoutMutation();
     }
 

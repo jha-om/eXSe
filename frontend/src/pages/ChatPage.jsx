@@ -19,8 +19,6 @@ import CallButton from "../components/CallButton";
 
 const STREAM_API_KEY = import.meta.env.VITE_STREAM_API_KEY;
 
-// TODO: i've to add logout functionality on the chatpage navbar;
-
 function ChatPage() {
     const { id: otherUserId } = useParams();
 
