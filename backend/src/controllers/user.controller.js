@@ -109,7 +109,6 @@ async function acceptFriendRequest(req, res) {
         await User.findByIdAndUpdate(friendRequest.recipient, {
             $addToSet: { friends: friendRequest.sender }
         });
-        console.log(User);
         res.status(200).json({
             success: true,
             message: "Friend request accepted successfully"
