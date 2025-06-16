@@ -12,8 +12,8 @@ import useAuthUser from "./hooks/useAuthUser.js"
 import Layout from "./components/Layout.jsx"
 
 function App() {
-  const {authUser , isLoading} = useAuthUser()
-  
+  const { authUser, isLoading } = useAuthUser()
+
   const isAuthenticated = Boolean(authUser);
   const isOnboarded = Boolean(authUser?.isOnboarded);
 
@@ -40,18 +40,22 @@ function App() {
             <NotificationsPage />
           </Layout>
         ) : (
-            <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
-        ) } />
+          <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />
+        )} />
         <Route path="/call" element={isAuthenticated ? <CallPage /> : <Navigate to={"/login"} />} />
-        <Route path="/chat" element={isAuthenticated ? <ChatPage /> : <Navigate to={"/login"} />} />
+        <Route path="/chat/:id" element={isAuthenticated && isOnboarded ? (
+          <Layout showSidebar={false}>
+            <ChatPage />
+          </Layout>
+        ) : <Navigate to={!isAuthenticated ? "/login" : "/onboarding"} />} />
         <Route path="/onboarding" element={isAuthenticated ? (
           !isOnboarded ? (
             <OnboardingPage />
           ) : (
-              <Navigate to={"/"}/>
+            <Navigate to={"/"} />
           )
-        ): (
-            <Navigate to="/login" />
+        ) : (
+          <Navigate to="/login" />
         )} />
       </Routes>
       <Toaster />

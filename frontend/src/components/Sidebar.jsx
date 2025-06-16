@@ -2,12 +2,14 @@ import { Link, useLocation } from "react-router";
 import useAuthUser from "../hooks/useAuthUser"
 import { BellDotIcon, Heart, Home, LogOutIcon, UserIcon } from "lucide-react";
 import useLogout from "../hooks/useLogout";
+import { useQuery } from "@tanstack/react-query";
+import { getfriendRequests } from "../lib/api";
 
 function Sidebar() {
     const { authUser } = useAuthUser();
     const location = useLocation();
     const currentPath = location.pathname;
-    console.log(currentPath);
+    // console.log(currentPath);
 
     // const queryClient = useQueryClient();
 
@@ -19,6 +21,12 @@ function Sidebar() {
     //         queryClient.invalidateQueries({ queryKey: ["authUser"] })
     //     }
     // })
+    const { data: friendRequests } = useQuery({
+        queryKey: ["friendRequests"],
+        queryFn: getfriendRequests,
+    });
+
+    const incomingRequests = friendRequests?.incomingRequests || [];
 
     const { logoutMutation } = useLogout();
 
@@ -53,10 +61,13 @@ function Sidebar() {
                 </Link>
                 <Link
                     to={"/notifications"}
-                    className={`btn justify-start w-full gap-3 px-3 normal-case rounded-full ${currentPath === "/notifications" ? "btn-active border-r-primary border-r-2 border-b-primary hover:btn-ghost" : ""}`}
+                    className={`btn justify-between w-full gap-3 px-3 normal-case rounded-full ${currentPath === "/notifications" ? "btn-active border-r-primary border-r-2 border-b-primary hover:btn-ghost" : ""}`}
                 >
-                    <BellDotIcon className="size-5 text-base-content opacity-70" color="#f72585" />
-                    <span>Notifications</span>
+                    <div className="flex gap-3 items-center">
+                        <BellDotIcon className="size-5 text-base-content opacity-70" color="#f72585" />
+                        <span>Notifications</span>
+                    </div>
+                    <span className="badge rounded-full text-primary badge-primary ml-2">{incomingRequests.length}</span>
                 </Link>
             </div>
 

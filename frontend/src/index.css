@@ -5,3 +5,100 @@
 body {
     background-color: black;
 }
+
+.str-chat__channel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    height: 100%;
+}
+
+.str-chat__container {
+    max-width: 1200px;
+    width: 100%;
+    height: 80% !important;
+    margin: 0 auto !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    background: transparent;
+}
+
+.str-chat__message-list {
+    background: transparent !important;
+}
+
+.str-chat__message-input {
+    background: transparent !important;
+}
+
+.str-chat__channel-header {
+    background: transparent !important;
+}
+
+.str-chat__channel-header-title {
+    color: white !important;
+    font-weight: 600 !important;
+}
+
+.str-chat__channel-header-info {
+    color: #888 !important;
+}
+
+.str-chat__main-panel {
+    background: transparent !important;
+}
+
+.str-chat__thread {
+    background: transparent !important;
+}
+
+.str-chat__message-simple {
+    background: transparent !important;
+}
+
+.str-chat__message-wrapper {
+    background: transparent !important;
+}
+
+.str-chat__send-button {
+    background: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3) !important;
+}
+
+.str-chat__send-button svg {
+    color: black !important; /* Black icon on white background for visibility */
+}
+
+.str-chat__send-button:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+    transform: scale(1.05) !important;
+}
+
+.str-chat__date-separator {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 20px 0 !important;
+    color: #888 !important;
+    font-size: 14px !important;
+}
+
+.str-chat__date-separator::after {
+    content: '' !important;
+    flex: 1 !important;
+    height: 1px !important;
+    background: #444 !important;
+    margin: 0 15px !important;
+}

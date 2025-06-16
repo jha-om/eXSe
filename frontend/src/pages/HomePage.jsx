@@ -53,7 +53,8 @@ function HomePage() {
                         className="btn border-slate-700 border-r-primary border-r-2 border-b-primary hover:btn-ghost btn-sm rounded-full"
                     >
                         <UsersIcon className="mr-2 size-4" color="#f72585" />
-                        Friend Requests
+                        <span className="hidden lg:inline xl:inline">Friend Requests</span>
+                        <span className="sm:inline md:inline lg:hidden xl:hidden">Requests</span>
                     </Link>
                 </div>
 
@@ -66,7 +67,7 @@ function HomePage() {
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {friends.map((friend) => (
-                            <FriendCard key={friend.key} friend={friend} />
+                            <FriendCard key={friend._id} friend={friend} />
                         ))}
                     </div>
                 )}

@@ -7,7 +7,7 @@ function Layout({children, showSidebar = false}) {
             <div className="flex">
                 {showSidebar && <Sidebar />}
 
-                <div className="flex-1">
+                <div className="flex-1 justify-between">
                     <Navbar />
 
                     <main className="flex-1">

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { acceptFriendRequest, getfriendRequests } from "../lib/api";
-import { BellIcon, ClipboardSignature, ClockIcon, MessageSquareIcon, UserCheck } from "lucide-react";
+import { BellIcon, ClockIcon, MessageSquareIcon, UserCheck } from "lucide-react";
+import NoNotificationsFound from "../components/NoNotificationsFound";
 
 function NotificationsPage() {
     const queryClient = useQueryClient();
@@ -21,8 +22,6 @@ function NotificationsPage() {
     const incomingRequests = friendRequests?.incomingRequests || [];
     const acceptedRequests = friendRequests?.acceptedRequests || [];
 
-    console.log(incomingRequests);
-    console.log(acceptedRequests);
     return (
         <div className="p-4 sm:p-6 lg:p-8 border m-5 border-base-300 rounded-2xl">
             <div className="container mx-auto space-y-8">
@@ -47,7 +46,6 @@ function NotificationsPage() {
                                             key={request._id}
                                             className="card bg-base-100 border border-base-300 rounded-3xl flex flex-col transition-shadow"
                                         >
-                                            {console.log(request)}
                                             <div className="card-body p-4">
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex items-center gap-3">
@@ -116,6 +114,9 @@ function NotificationsPage() {
                             ))}
                         </div>
                     </section>
+                )}
+                {incomingRequests.length === 0 && acceptedRequests.length === 0 && (
+                    <NoNotificationsFound />
                 )}
             </div>
         </div>
