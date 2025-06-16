@@ -101,7 +101,6 @@ async function login(req, res) {
             success: true,
             message: "user logged in successfully",
             user: loggedInUser,
-            token,
         })
     } catch (error) {
         console.log("error while login ::", error);
