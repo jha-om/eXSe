@@ -17,18 +17,49 @@ body {
 .str-chat__container {
     max-width: 1200px;
     width: 100%;
-    height: 80% !important;
+    height: 100% !important;
     margin: 0 auto !important;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
     background: transparent;
+    overflow: hidden !important;
 }
 
 .str-chat__message-list {
     background: transparent !important;
+    scroll-behavior: smooth !important;
 }
 
+/* .str-chat__message-list-scroll {
+    height: 100% !important;
+    overflow: hidden !important;
+} */
+
+.str-chat__virtual-message-list-wrapper {
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+.str-chat__message-list__wrapper {
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Custom scrollbar styling */
+.custom-messages::-webkit-scrollbar {
+    width: 8px;
+} */
+
+.custom-messages::-webkit-scrollbar-thumb {
+    background: rgba(247, 37, 133, 0.5);
+    border-radius: 10px;
+}
+
+.custom-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(247, 37, 133, 0.7);
+}
+
+/* Stream Chat component styling */
 .str-chat__message-input {
     background: transparent !important;
 }
@@ -48,6 +79,9 @@ body {
 
 .str-chat__main-panel {
     background: transparent !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 .str-chat__thread {
@@ -78,7 +112,7 @@ body {
 }
 
 .str-chat__send-button svg {
-    color: black !important; /* Black icon on white background for visibility */
+    color: black !important;
 }
 
 .str-chat__send-button:hover {

@@ -10,18 +10,7 @@ function Sidebar() {
     const { authUser } = useAuthUser();
     const location = useLocation();
     const currentPath = location.pathname;
-    // console.log(currentPath);
 
-    // const queryClient = useQueryClient();
-
-    // const { mutate: logoutMutation } = useMutation({
-    //     mutationFn: logout,
-    //     onSuccess: () => {
-    //         toast.success("Logout successfully");
-    //         queryClient.setQueryData(["authUser"], null);
-    //         queryClient.invalidateQueries({ queryKey: ["authUser"] })
-    //     }
-    // })
     const { data: friendRequests } = useQuery({
         queryKey: ["friendRequests"],
         queryFn: getfriendRequests,

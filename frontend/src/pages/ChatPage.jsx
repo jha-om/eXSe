@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router"
 import useAuthUser from "../hooks/useAuthUser";
 import { useQuery } from "@tanstack/react-query";
@@ -26,14 +26,23 @@ function ChatPage() {
     const [channel, setChannel] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const messagesContainerRef = useRef(null);
+
     const { authUser } = useAuthUser();
 
     const { data: tokenData } = useQuery({
         queryKey: ["streamToken"],
         queryFn: getStreamToken,
-        // we want to run this query after only we get back the user from authUser fn;
-        enabled: !!authUser // !! == Boolean();
+        enabled: !!authUser
     });
+
+    const scrollToBottom = () => {
+        if (messagesContainerRef.current) {
+            const container = messagesContainerRef.current;
+            container.scrollTop = container.scrollHeight;
+        }
+    };
+
     useEffect(() => {
         const initChat = async () => {
             if (!tokenData?.token || !authUser) return;
@@ -53,6 +62,11 @@ function ChatPage() {
 
                 await currentChannel.watch();
 
+                // Auto-scroll on new messages
+                currentChannel.on("message.new", () => {
+                    setTimeout(scrollToBottom, 100);
+                });
+
                 setChatClient(client);
                 setChannel(currentChannel);
             } catch (error) {
@@ -66,6 +80,11 @@ function ChatPage() {
         initChat();
     }, [authUser, otherUserId, tokenData])
 
+    useEffect(() => {
+        if (channel) {
+            setTimeout(scrollToBottom, 500);
+        }
+    }, [channel]);
 
     const handleVideoCall = () => {
         if (channel) {
@@ -84,21 +103,33 @@ function ChatPage() {
 
     return (
         <div className="h-[calc(98vh-2.5rem)] p-4 sm:p-6 lg:p-8 border m-5 border-base-300 rounded-2xl bg-transparent overflow-hidden">
-            <div className="rounded-2xl overflow-hidden bg-transparent">
+            <div className="rounded-2xl bg-transparent h-full">
                 <Chat client={chatClient} theme="str-chat__theme-dark">
                     <Channel channel={channel}>
-                        <div className="w-full relative">
+                        <div className="w-full relative h-full flex flex-col">
                             <CallButton handleVideoCall={handleVideoCall} />
                             <Window>
                                 <div className="custom-chat-container h-full flex flex-col overflow-hidden">
-                                    <div className="custom-header bg-transparent border-b border-base-300 p-4 rounded-t-2xl">
+                                    <div className="custom-header bg-transparent border-b border-base-300 p-4 rounded-t-2xl flex-shrink-0">
                                         <ChannelHeader />
                                     </div>
-                                    <div className="custom-messages flex-1 bg-transparent overflow-hidden">
+                                    <div 
+                                        ref={messagesContainerRef}
+                                        className="flex-1 bg-transparent"
+                                        style={{ 
+                                            scrollBehavior: 'smooth',
+                                            minHeight: 0
+                                        }}
+                                    >
                                         <MessageList />
                                     </div>
-                                    <div className="custom-input bg-transparent border-t border-base-300 p-4 rounded-b-2xl">
-                                        <MessageInput focus />
+                                    <div className="custom-input bg-transparent border-t border-base-300 p-4 rounded-b-2xl flex-shrink-0">
+                                        <MessageInput 
+                                            focus 
+                                            onSubmit={() => {
+                                                setTimeout(scrollToBottom, 100);
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </Window>

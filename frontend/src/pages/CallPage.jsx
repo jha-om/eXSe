@@ -37,14 +37,12 @@ function CallPage() {
         enabled: !!authUser // !! == Boolean();
     });
 
-    console.log(tokenData);
 
     useEffect(() => {
         const initCall = async () => {
             if (!tokenData.token || !authUser || !callId) return;
 
             try {
-                console.log("stream video client");
                 const user = {
                     id: authUser._id,
                     name: authUser.fullName,
