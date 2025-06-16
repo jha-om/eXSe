@@ -83,14 +83,14 @@ function ChatPage() {
     }
 
     return (
-        <div className="h-[calc(100vh-7rem)] p-4 sm:p-6 lg:p-8 border m-5 border-base-300 rounded-2xl bg-transparent">
+        <div className="h-[calc(98vh-2.5rem)] p-4 sm:p-6 lg:p-8 border m-5 border-base-300 rounded-2xl bg-transparent overflow-hidden">
             <div className="rounded-2xl overflow-hidden bg-transparent">
                 <Chat client={chatClient} theme="str-chat__theme-dark">
                     <Channel channel={channel}>
                         <div className="w-full relative">
                             <CallButton handleVideoCall={handleVideoCall} />
                             <Window>
-                                <div className="custom-chat-container h-full flex flex-col">
+                                <div className="custom-chat-container h-full flex flex-col overflow-hidden">
                                     <div className="custom-header bg-transparent border-b border-base-300 p-4 rounded-t-2xl">
                                         <ChannelHeader />
                                     </div>

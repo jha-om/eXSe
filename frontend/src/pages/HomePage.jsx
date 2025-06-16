@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useState } from "react";
 import { getOutgoingFriendRequest, getRecommendedUsers, getUserFriends, sendFriendRequest } from "../lib/api";
 import { Link } from "react-router";
-import { CheckCircleIcon, MapPinIcon, UserPlusIcon, Users2Icon, UsersIcon } from "lucide-react";
+import { CheckCircleIcon, MapPinIcon, UserPlusIcon, UsersIcon } from "lucide-react";
 import FriendCard from "../components/FriendCard";
 import NoFriendsFound from "../components/NoFriendsFound";
 import NoRecommendedFriend from "../components/NoRecommendedFriend";
@@ -44,7 +44,7 @@ function HomePage() {
     }, [outgoingFriendRequest]);
 
     return (
-        <div className="p-4 sm:p-6 lg:p-8 border m-5 border-base-300 rounded-2xl">
+        <div className="h-[calc(90.5vh-2.5rem)] p-4 sm:p-6 lg:p-8 border m-5 border-base-300 rounded-2xl">
             <div className="container mx-auto space-y-10">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Your Friends</h2>
