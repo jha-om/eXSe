@@ -82,7 +82,7 @@ function NotificationsPage() {
                 {acceptedRequests.length > 0 && (
                     <section className="space-y-4">
                         <h2 className="text-xl font-semibold flex items-center gap-2">
-                            <BellIcon className="h-5 w-5 text-success" />
+                            <BellIcon className="h-5 w-5 text-success" color="#f72585"/>
                             New Connections
                         </h2>
 
@@ -100,13 +100,13 @@ function NotificationsPage() {
                                             <p className="text-sm my-1">
                                                 {notification.recipient.fullName} accepted your friend request
                                             </p>
-                                            <p className="text-xs flex items-center opacity-70">
-                                                <ClockIcon className="h-3 w-3 mr-1" />
+                                            <p className="text-xs flex items-center opacity-90">
+                                                <ClockIcon className="h-3 w-3 mr-1" color="#f72585"/>
                                                 Recently
                                             </p>
                                         </div>
-                                        <div className="badge badge-success">
-                                            <MessageSquareIcon className="h-3 w-3 mr-1" />
+                                        <div className="badge rounded-full border border-r-primary border-r-2 border-b-primary border-slate-600">
+                                            <MessageSquareIcon className="h-3 w-3 mr-1" color="#f72585"/>
                                             New Friend
                                         </div>
                                     </div>

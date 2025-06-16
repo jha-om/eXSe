@@ -1,8 +1,9 @@
 import { useLocation, Link } from "react-router";
 import useAuthUser from "../hooks/useAuthUser"
-import { BellDotIcon, Heart } from "lucide-react";
+import { BellDotIcon, Heart, LogOutIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getfriendRequests } from "../lib/api";
+import useLogout from "../hooks/useLogout";
 
 
 function Navbar() {
@@ -17,6 +18,11 @@ function Navbar() {
 
     const incomingRequests = friendRequests?.incomingRequests || [];
 
+    const { logoutMutation } = useLogout();
+
+    const handleLogout = () => {
+        logoutMutation();
+    }
 
     return (
         <nav className="bg-base-100 border m-5 rounded-full border-base-300 sticky top-0 z-30 h-[4.8rem] flex items-center">
@@ -47,6 +53,7 @@ function Navbar() {
                             </Link>
                         </div>
                     </div>
+                    {isChatPage && <LogOutIcon className="cursor-pointer" color="#f72585" onClick={handleLogout} />}
                 </div>
             </div>
         </nav >

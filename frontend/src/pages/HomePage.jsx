@@ -73,7 +73,7 @@ function HomePage() {
                 )}
 
                 <section>
-                    <div className="flex flex-col mb-10 sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Meet New Friends</h2>
                             <p className="opacity-70">
@@ -116,7 +116,6 @@ function HomePage() {
                                             </div>
                                             {recommendedUser.bio && <p className="text-md opacity-90">{recommendedUser.bio}</p>}
 
-                                            {/* action button -- friend request sent or not */}
                                             <button
                                                 className={`btn bg-primary/20 sm:p-1 rounded-full w-full mt-2 ${hasRequestBeenSent ? "btn-disabled" : "btn-primary"
                                                     }`}
